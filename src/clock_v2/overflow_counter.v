@@ -24,18 +24,25 @@ input  wire i_en;
 output wire [WIDTH-1:0] o_count;
 output wire o_overflow;
 
-assign o_overflow = o_count >= OVERFLOW-1;
+reg [WIDTH-1:0] counter = 0;
+assign o_count = counter;
+assign o_overflow = (o_count >= OVERFLOW-1) & i_en;
 
-// active low signal for reseting the counter
-wire clear_counter_n = !(!i_reset_n | o_overflow);
-
-upcounter #(
-	.WIDTH(WIDTH)
-) counter_inst (
-	.i_sysclk(i_sysclk),
-	.i_reset_n(clear_counter_n),
-	.i_en(i_en),
-	.o_count(o_count)
-);
+always @(posedge i_sysclk)
+begin
+	if (!i_reset_n)
+        begin
+		counter <= 0;
+	end
+	else if (i_en)
+        begin
+		if (o_overflow) begin
+			counter <= 0;
+		end
+		else begin
+			counter <= counter + 1;
+		end
+	end
+end
 
 endmodule
