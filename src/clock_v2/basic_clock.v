@@ -9,7 +9,7 @@
 `default_nettype none
 
 module basic_clock (
-	i_sysclk,       // fast system clock (~50MHz)
+	i_clk,       // fast system clock (~50MHz)
 	i_reset_n,      // syncronous reset (active low)
 	i_en,           // enable counting 
 
@@ -17,8 +17,9 @@ module basic_clock (
 	o_minutes,
 	o_hours
 );
+parameter SYS_CLK_HZ = 50_000_000;
 
-input  wire i_sysclk;
+input  wire i_clk;
 input  wire i_reset_n;
 input  wire i_en;
 
@@ -32,10 +33,10 @@ wire clk_div;
 
 wire seconds_sysclk_div;
 sysclk_divider #(
-	.SYS_CLK_HZ(50_000_000),
+	.SYS_CLK_HZ(SYS_CLK_HZ),
 	.OUT_CLK_HZ(1),
 ) sysclk_div_inst (
-	.i_sysclk(i_sysclk),
+	.i_sysclk(i_clk),
 	.i_reset_n(i_reset_n),
 	.i_en(i_en),
 	.o_div(clk_div),
@@ -48,7 +49,7 @@ overflow_counter #(
 	.WIDTH(6),
 	.OVERFLOW(60)
 ) seconds_count_inst (
-	.i_sysclk(i_sysclk),
+	.i_sysclk(i_clk),
 	.i_reset_n(i_reset_n),
 	.i_en(seconds_count),
 	.o_count(o_seconds),
@@ -61,7 +62,7 @@ overflow_counter #(
 	.WIDTH(6),
 	.OVERFLOW(60)
 ) minutes_count_inst (
-	.i_sysclk(i_sysclk),
+	.i_sysclk(i_clk),
 	.i_reset_n(i_reset_n),
 	.i_en(minutes_count),
 	.o_count(o_minutes),
@@ -76,7 +77,7 @@ overflow_counter #(
 	.WIDTH(5),
 	.OVERFLOW(24)
 ) hours_count_inst (
-	.i_sysclk(i_sysclk),
+	.i_sysclk(i_clk),
 	.i_reset_n(i_reset_n),
 	.i_en(hours_count),
 	.o_count(o_hours),
