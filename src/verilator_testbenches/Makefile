@@ -1,16 +1,16 @@
-verilog_SRCS = basic_clock.v time_register.v overflow_counter.v sysclk_divider.v upcounter.v timeset_divider.v load_divider.v
-testbench = basic_clock_tb.cpp
-top_module = basic_clock
-#verilog_SRCS = timeset_divider.v load_divider.v
-#testbench = timeset_divider_tb.cpp
-#top_module = timeset_divider
+#verilog_SRCS = basic_clock.v time_register.v overflow_counter.v sysclk_divider.v upcounter.v timeset_divider.v load_divider.v
+#testbench = basic_clock_tb.cpp
+#top_module = basic_clock
+verilog_SRCS = bin_to_bcd.v
+testbench = bin_to_bcd.cpp
+top_module = bin_to_bcd
 
 SRC_DIR = ../clock_v2
 
 SYS_CLK_HZ = 10000 
 
-PARAMS = -GSYS_CLK_HZ=$(SYS_CLK_HZ)
-DEFINES = -DSYS_CLK_HZ=$(SYS_CLK_HZ)
+#PARAMS = -GSYS_CLK_HZ=$(SYS_CLK_HZ)
+#DEFINES = -DSYS_CLK_HZ=$(SYS_CLK_HZ)
 #PARAMS = -GWIDTH=8
 
 verilator_include = /usr/share/verilator/include
