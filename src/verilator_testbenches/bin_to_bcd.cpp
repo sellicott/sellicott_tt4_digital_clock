@@ -17,7 +17,7 @@ int main(int nargs, char **args) {
     assert(msb == i / 10);
   }
 
-  tb->core->i_bin = 64;
+  tb->core->i_bin = 0x3F & 64;
   tb->tick();
   int msb = tb->core->o_bcd_msb;
   int lsb = tb->core->o_bcd_lsb;
@@ -25,7 +25,7 @@ int main(int nargs, char **args) {
   // assert(lsb == 0);
   // assert(msb == 0);
 
-  tb->core->i_bin = 65;
+  tb->core->i_bin = 0x3F & 65;
   tb->tick();
   msb = tb->core->o_bcd_msb;
   lsb = tb->core->o_bcd_lsb;
