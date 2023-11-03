@@ -35,10 +35,10 @@ wire msb_6 = (i_bin >= 6'd60) && (i_bin <= 6'd63);
 /* verilator lint_on CMPCONST */
 
 wire [6:0] msb_one_hot = {msb_6, msb_5, msb_4, msb_3, msb_2, msb_1, msb_0};
-reg [3:0] bcd_msb = 0;
-/* verilator lint_off UNUSEDSIGNAL */
-reg [5:0] bcd_lsb = 0;
-/* verilator lint_on UNUSEDSIGNAL */
+reg [3:0] bcd_msb;
+/* verilator lint_off UNUSED */
+reg [5:0] bcd_lsb;
+/* verilator lint_on  UNUSED */
 
 
 always @(*) begin

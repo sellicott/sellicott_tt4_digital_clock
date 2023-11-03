@@ -32,6 +32,10 @@ input wire       i_en;
 input wire       i_fast_set;
 input wire [1:0] i_mode;
 
+output wire o_serial_data;
+output wire o_serial_latch;
+output wire o_serial_clk;
+
 wire [5:0] clock_seconds;
 wire [5:0] clock_minutes;
 wire [4:0] clock_hours;
@@ -75,4 +79,22 @@ clock_to_7seg disp_out (
         .o_seconds_msb(seconds_msb),
         .o_seconds_lsb(seconds_lsb)
 );
+
+output_wrapper shift_out_inst (
+    .sr_clk(i_clk),
+    .i_reset_n(i_reset_n),
+    .en(i_en),
+
+    .hours_msd(hours_msb),
+    .hours_lsd(hours_lsb),
+    .minutes_msd(minutes_msb),
+    .minutes_lsd(minutes_lsb),
+    .seconds_msd(seconds_msb),
+    .seconds_lsd(seconds_lsb),
+
+    .serial_out(o_serial_data),
+    .latch_out(o_serial_latch),
+    .clk_out(o_serial_clk)
+);
+
 endmodule
