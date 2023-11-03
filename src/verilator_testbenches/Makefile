@@ -1,11 +1,13 @@
-#verilog_SRCS = basic_clock.v overflow_counter.v sysclk_divider.v upcounter.v 
-verilog_SRCS = timeset_divider.v load_divider.v
-testbench = timeset_divider_tb.cpp
-top_module = timeset_divider
+verilog_SRCS = basic_clock.v time_register.v overflow_counter.v sysclk_divider.v upcounter.v timeset_divider.v load_divider.v
+testbench = basic_clock_tb.cpp
+top_module = basic_clock
+#verilog_SRCS = timeset_divider.v load_divider.v
+#testbench = timeset_divider_tb.cpp
+#top_module = timeset_divider
 
 SRC_DIR = ../clock_v2
 
-SYS_CLK_HZ = 1000000 
+SYS_CLK_HZ = 10000 
 
 PARAMS = -GSYS_CLK_HZ=$(SYS_CLK_HZ)
 DEFINES = -DSYS_CLK_HZ=$(SYS_CLK_HZ)

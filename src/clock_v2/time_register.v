@@ -20,14 +20,12 @@ module time_register(
 	i_clk,       // fast system clock (~50MHz)
 	i_reset_n,   // syncronous reset (active low)
 	i_en,        // enable counting 
-
 	i_mode,      // Mode inputs
 
-	o_seconds
+	o_seconds,
 	o_minutes,
 	o_hours
 );
-parameter SYS_CLK_HZ = 50_000_000;
 input  wire       i_clk;
 input  wire       i_reset_n;
 input  wire       i_en;
@@ -53,17 +51,9 @@ localparam COUNTING      = 2'd0;
 localparam SET_MINUTES   = 2'd1;
 localparam SET_HOURS     = 2'd2;
 localparam CLEAR_SECONDS = 2'd3;
-reg mode = 0;
 
 always @(posedge i_clk) begin
-	if (!i_reset_n) begin
-		mode <= i_mode;
-	end	
-	else begin
-		mode <= 0;
-	end
-
-	case (mode)
+	case (i_mode)
 		COUNTING: begin
 			seconds_count <= i_en;
 			minutes_count <= seconds_overflow;
