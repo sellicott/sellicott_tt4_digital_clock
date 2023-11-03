@@ -19,9 +19,9 @@ module clock_to_7seg (
 );
 
 input wire i_clk;
-input wire [5:0] o_seconds;
-input wire [5:0] o_minutes;
-input wire [4:0] o_hours;
+input wire [5:0] i_seconds;
+input wire [5:0] i_minutes;
+input wire [4:0] i_hours;
 
 output wire [6:0] o_hours_msb   = 0;
 output wire [6:0] o_hours_lsb   = 0;
@@ -64,9 +64,11 @@ always @(posedge i_clk) begin
 	end
 end
 
+wire [5:0] hours_int = {1'b0, i_hours};
+
 bin_to_bcd hours_bcd_inst (
 	.i_clk(i_clk),
-	.i_bin(i_hours),
+	.i_bin(hours_int),
 	.o_bcd_lsb(hours_lsb),
 	.o_bcd_msb(hours_msb)
 );

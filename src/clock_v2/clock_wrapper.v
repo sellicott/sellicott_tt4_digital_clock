@@ -36,6 +36,13 @@ wire [5:0] clock_seconds;
 wire [5:0] clock_minutes;
 wire [4:0] clock_hours;
 
+wire [6:0] hours_msb;
+wire [6:0] hours_lsb;
+wire [6:0] minutes_msb;
+wire [6:0] minutes_lsb;
+wire [6:0] seconds_msb;
+wire [6:0] seconds_lsb;
+
 basic_clock #(
 	.SYS_CLK_HZ(SYS_CLK_HZ),
 	.FAST_SET_HZ(FAST_SET_HZ),
@@ -61,11 +68,11 @@ clock_to_7seg disp_out (
 	.i_minutes(clock_minutes),
 	.i_hours(clock_hours),
 
-        .o_hours_msb,
-        .o_hours_lsb,
-        .o_minutes_msb,
-        .o_minutes_lsb,
-        .o_seconds_msb,
-        .o_seconds_lsb
+        .o_hours_msb(hours_msb),
+        .o_hours_lsb(hours_lsb),
+        .o_minutes_msb(minutes_msb),
+        .o_minutes_lsb(minutes_lsb),
+        .o_seconds_msb(seconds_msb),
+        .o_seconds_lsb(seconds_lsb)
 );
 endmodule
