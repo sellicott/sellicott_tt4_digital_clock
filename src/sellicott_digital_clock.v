@@ -13,3 +13,54 @@ module sellicott_digital_clock (
     input  wire       clk,      // clock ~ 10MHz
     input  wire       rst_n     // reset_n - low to reset
 );
+parameter SYS_CLK_HZ   =  5_000_000;
+parameter SHIFT_CLK_HZ =  1_000_000;
+parameter REF_CLK_HZ   =      32768;
+parameter DEBOUNCE_HZ  =      1_000;
+parameter FAST_SET_HZ  = 5;
+parameter SLOW_SET_HZ  = 2;
+parameter DEBOUNCE_SAMPLES = 5;
+
+wire refclk      = ui_in[0];
+wire use_refclk  = ui_in[1];
+
+wire fast_set    = ui_in[2];
+wire hours_set   = ui_in[3];
+wire minutes_set = ui_in[4];
+wire [1:0] mode  = {hours_set, minutes_set};
+
+wire serial_data;
+wire serial_latch;
+wire serial_clk;
+
+assign uo_out[0]  = serial_data;
+assign uo_out[1]  = serial_latch;
+assign uo_out[2]  = serial_clk;
+
+// deal with the pins we aren't using currently
+assign uo_out[7:3]  = 5'h0;
+assign uio_oe[7:0]  = 8'h0;
+assign uio_out[7:0] = 8'h0;
+
+clock_wrapper #(
+	.SYS_CLK_HZ(SYS_CLK_HZ),
+	.REF_CLK_HZ(REF_CLK_HZ),
+	.SHIFT_CLK_HZ(SHIFT_CLK_HZ),
+	.DEBOUNCE_HZ(DEBOUNCE_HZ),
+	.FAST_SET_HZ(FAST_SET_HZ),
+	.SLOW_SET_HZ(SLOW_SET_HZ),
+	.DEBOUNCE_SAMPLES(DEBOUNCE_SAMPLES)
+) clock_inst (
+	.i_clk(clk),
+	.i_refclk(i_refclk),
+	.i_reset_n(rst_n),
+	.i_en(ena),
+	.i_use_refclk(use_refclk),
+	.i_fast_set(fast_set),
+	.i_mode(mode),
+
+	.o_serial_data(o_serial_data),
+	.o_serial_latch(o_serial_latch),
+	.o_serial_clk(o_serial_clk)
+);
+endmodule
