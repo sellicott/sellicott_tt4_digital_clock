@@ -5,7 +5,7 @@ project:
 
 # If using an HDL, set wokwi_id as 0 and uncomment and list your source files here. 
 # Source files must be in ./src and you must list each source file separately
-source_files:        
+  source_files:        
   - tt_um_digital_clock_sellicott.v
   - clock_wrapper.v
   - clock_stb_gen.v
@@ -22,7 +22,7 @@ source_files:
   - bcd_to_7seg.v
   - bin_to_bcd.v
   - shift_register.v
-top_module:  "tt_um_digital_clock_sellicott"
+  top_module:  "tt_um_digital_clock_sellicott"
 
 # How many tiles your design occupies? A single tile is about 167x108 uM.
   tiles: "1x1"    # Valid values: 1x1, 1x2, 2x2, 4x2 or 8x2
