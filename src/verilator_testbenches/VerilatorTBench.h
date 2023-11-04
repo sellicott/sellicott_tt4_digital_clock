@@ -15,8 +15,7 @@ public:
   int32_t clk_period;
 
   VerilatorTBench(std::string const &filename, int period = 10)
-      : core(std::make_unique<VerilatorType>()),
-        trace(std::make_unique<VerilatedVcdC>()) {
+      : core(new VerilatorType()), trace(new VerilatedVcdC()) {
     tickcount = 0;
     clk_period = period;
 
