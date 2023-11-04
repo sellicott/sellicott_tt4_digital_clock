@@ -29,8 +29,10 @@ module clock_wrapper (
 parameter SYS_CLK_HZ   = 50_000_000;
 parameter SHIFT_CLK_HZ =  1_000_000;
 parameter REF_CLK_HZ   =     32_768;
+parameter DEBOUNCE_HZ  =      1_000;
 parameter FAST_SET_HZ  = 5;
 parameter SLOW_SET_HZ  = 2;
+parameter DEBOUNCE_SAMPLES = 5;
 
 input wire       i_reset_n;
 input wire       i_clk;
@@ -59,16 +61,21 @@ wire [3:0] seconds_lsb;
 /* verilator lint_off UNUSED */
 wire clk_1hz;
 wire refclk_stb;
+wire debounce_clk;
 /* verilator lint_on  UNUSED */
 
 wire clk_1hz_stb;
 wire refclk_1hz_stb;
+wire debounce_stb;
 
 wire timeset_stb;
 wire refclk_timeset_stb;
-
 wire clk_update_stb;
 
+// debounced inputs
+wire fast_set_db;
+wire use_refclk_db;
+wire [1:0] mode_db;
 
 clock_stb_gen #(
 	.SYS_CLK_HZ(SYS_CLK_HZ),
@@ -78,7 +85,7 @@ clock_stb_gen #(
 	.i_clk(i_clk),
 	.i_en(i_en),
 	.i_reset_n(i_reset_n),
-	.i_fast_set(i_fast_set),
+	.i_fast_set(fast_set_db),
 
 	.o_1hz_clk(clk_1hz),
 	.o_1hz_stb(clk_1hz_stb),
@@ -94,7 +101,7 @@ reference_clk_stb #(
 	.i_clk(i_clk),
 	.i_en(i_en),
 	
-	.i_fast_set(i_fast_set),
+	.i_fast_set(fast_set_db),
 	.i_refclk(i_refclk),
 
 	.o_refclk_stb(refclk_stb),
@@ -102,9 +109,70 @@ reference_clk_stb #(
 	.o_refclk_timeset_stb(refclk_timeset_stb)
 );
 
+sysclk_divider #(
+	.SYS_CLK_HZ(SYS_CLK_HZ),
+	.OUT_CLK_HZ(DEBOUNCE_HZ)
+) debounce_clk_inst (
+    .i_sysclk(i_clk),
+    .i_reset_n(i_reset_n),
+    .i_en(i_en),
+    .o_div(debounce_clk),
+    .o_clk_overflow(debounce_stb)
+);
+
+
+// debounce the button inputs
+button_debounce #(
+	.NUM_SAMPLES(DEBOUNCE_SAMPLES)
+) fast_set_db_inst (
+	.i_reset_n(i_reset_n),
+	.i_clk(i_clk),
+	.i_en(i_en),
+	.i_sample_stb(debounce_stb),
+
+	.i_button(i_fast_set),
+	.o_button_state(fast_set_db)
+);
+
+button_debounce #(
+	.NUM_SAMPLES(DEBOUNCE_SAMPLES)
+) use_refclk_db_inst (
+	.i_reset_n(i_reset_n),
+	.i_clk(i_clk),
+	.i_en(i_en),
+	.i_sample_stb(debounce_stb),
+
+	.i_button(i_use_refclk),
+	.o_button_state(use_refclk_db)
+);
+
+button_debounce #(
+	.NUM_SAMPLES(DEBOUNCE_SAMPLES)
+) mode0_db_inst (
+	.i_reset_n(i_reset_n),
+	.i_clk(i_clk),
+	.i_en(i_en),
+	.i_sample_stb(debounce_stb),
+
+	.i_button(i_mode[0]),
+	.o_button_state(mode_db[0])
+);
+button_debounce #(
+	.NUM_SAMPLES(DEBOUNCE_SAMPLES)
+) mode1_db_inst (
+	.i_reset_n(i_reset_n),
+	.i_clk(i_clk),
+	.i_en(i_en),
+	.i_sample_stb(debounce_stb),
+
+	.i_button(i_mode[1]),
+	.o_button_state(mode_db[1])
+);
+
+
 // select between the two timebases
-wire clock_in_1hz_stb     = i_use_refclk ? refclk_1hz_stb : clk_1hz_stb;
-wire clock_in_timeset_stb = i_use_refclk ? refclk_timeset_stb : timeset_stb;
+wire clock_in_1hz_stb     = use_refclk_db ? refclk_1hz_stb : clk_1hz_stb;
+wire clock_in_timeset_stb = use_refclk_db ? refclk_timeset_stb : timeset_stb;
 
 basic_clock clock_inst (
 	.i_clk(i_clk),
@@ -112,7 +180,7 @@ basic_clock clock_inst (
 	.i_1hz_stb(clock_in_1hz_stb),
 	.i_timeset_stb(clock_in_timeset_stb),
 	.o_clk_stb(clk_update_stb),
-	.i_mode(i_mode),
+	.i_mode(mode_db),
 
 	.o_seconds(clock_seconds),
 	.o_minutes(clock_minutes),

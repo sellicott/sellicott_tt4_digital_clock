@@ -18,11 +18,13 @@ module clock_wrapper_tb (
 	o_parallel_data
 );
 parameter SYS_CLK_HZ   = 50_000_000;
-parameter SHIFT_CLK_HZ = 1_000_000;
-parameter REF_CLK_HZ   =    32768;
+parameter SHIFT_CLK_HZ =  1_000_000;
+parameter REF_CLK_HZ   =      32768;
+parameter DEBOUNCE_HZ  =      1_000;
 parameter FAST_SET_HZ  = 5;
 parameter SLOW_SET_HZ  = 2;
 parameter SHIFT_WIDTH  = 6*8;
+parameter DEBOUNCE_SAMPLES = 5;
 
 input wire       i_reset_n;
 input wire       i_clk;
@@ -42,8 +44,10 @@ clock_wrapper #(
 	.SYS_CLK_HZ(SYS_CLK_HZ),
 	.REF_CLK_HZ(REF_CLK_HZ),
 	.SHIFT_CLK_HZ(SHIFT_CLK_HZ),
+	.DEBOUNCE_HZ(DEBOUNCE_HZ),
 	.FAST_SET_HZ(FAST_SET_HZ),
-	.SLOW_SET_HZ(SLOW_SET_HZ)
+	.SLOW_SET_HZ(SLOW_SET_HZ),
+	.DEBOUNCE_SAMPLES(DEBOUNCE_SAMPLES)
 ) clock_inst (
 	.i_clk(i_clk),          // fast system clock (~50MHz)
 	.i_refclk(i_refclk),

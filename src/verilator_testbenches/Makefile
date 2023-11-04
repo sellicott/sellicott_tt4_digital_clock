@@ -1,20 +1,27 @@
-#verilog_SRCS = clock_wrapper.v \
-#	       basic_clock.v time_register.v overflow_counter.v sysclk_divider.v upcounter.v timeset_divider.v load_divider.v \
-#	       output_wrapper.v digit_shift_register.v shift_register_controller.v \
-#	       bin_to_bcd.v bcd_segment_mux.v bcd_to_7seg.v clock_to_7seg.v
-#testbench = clock_wrapper_tb.cpp
-#top_module = clock_wrapper
-verilog_SRCS = shift_register.v shift_register_tb.v sysclk_divider.v
-testbench = shift_register_tb.cpp
-top_module = shift_register_tb
+verilog_SRCS = clock_wrapper_tb.v clock_wrapper.v \
+	       basic_clock.v time_register.v overflow_counter.v sysclk_divider.v upcounter.v timeset_divider.v load_divider.v \
+	       output_wrapper.v digit_shift_register.v shift_register_controller.v \
+	       bin_to_bcd.v bcd_segment_mux.v bcd_to_7seg.v clock_to_7seg.v \
+	       shift_register.v clock_stb_gen.v \
+	       reference_clk_stb.v \
+	       button_debounce.v
+testbench = clock_wrapper_tb.cpp
+top_module = clock_wrapper_tb
+#verilog_SRCS = reference_clk_stb.v overflow_counter.v sysclk_divider.v upcounter.v timeset_divider.v load_divider.v
+#testbench = reference_clk_stb_tb.cpp
+#top_module = reference_clk_stb
 
 SRC_DIR = ../clock_v2
 
-SYS_CLK_HZ = 10000
+SYS_CLK_HZ = 100000
+REF_CLK_HZ = 32768
+SHIFT_CLK_HZ = 1000
+DEBOUNCE_HZ = 10000
 
-PARAMS = -GSYS_CLK_HZ=$(SYS_CLK_HZ) -GSHIFT_CLK_HZ=1000
-DEFINES = -DSYS_CLK_HZ=$(SYS_CLK_HZ)
+PARAMS = -GSYS_CLK_HZ=$(SYS_CLK_HZ) -GSHIFT_CLK_HZ=$(SHIFT_CLK_HZ) -GREF_CLK_HZ=$(REF_CLK_HZ) -GDEBOUNCE_HZ=$(DEBOUNCE_HZ)
+DEFINES = -DSYS_CLK_HZ=$(SYS_CLK_HZ) -DREF_CLK_HZ$(REF_CLK_HZ) -DDEBOUNCE_HZ=$(DEBOUNCE_HZ)
 #PARAMS = -GWIDTH=8
+#PARAMS = -GREF_CLK_HZ=$(REF_CLK_HZ)
 
 #verilator_include = $(HOME)/.local/extra_packages/verilator/usr/share/verilator/include
 verilator_include = /usr/share/verilator/include
