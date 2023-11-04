@@ -11,7 +11,7 @@ top_module = clock_wrapper_tb
 #testbench = reference_clk_stb_tb.cpp
 #top_module = reference_clk_stb
 
-SRC_DIR = ../clock_v2
+SRC_DIR = ../
 
 SYS_CLK_HZ = 100000
 REF_CLK_HZ = 32768

@@ -3,7 +3,7 @@
  * Top level module for the digital clock deisgn
  * Wraps the actual design for use with the TinyTapeout4 template
  */
-module sellicott_digital_clock (
+module tt_um_digital_clock_sellicott (
     input  wire [7:0] ui_in,    // Dedicated inputs - connected to the input switches
     output wire [7:0] uo_out,   // Dedicated outputs - connected to the 7 segment display
     input  wire [7:0] uio_in,   // IOs: Bidirectional Input path
@@ -44,7 +44,7 @@ assign uio_out[7:0] = 8'h0;
 
 clock_wrapper #(
 	.SYS_CLK_HZ(SYS_CLK_HZ),
-	.REF_CLK_HZ(REF_CLK_HZ),
+	.REF_CLK_HZ(REF_CLK_HZ)500_000,
 	.SHIFT_CLK_HZ(SHIFT_CLK_HZ),
 	.DEBOUNCE_HZ(DEBOUNCE_HZ),
 	.FAST_SET_HZ(FAST_SET_HZ),

@@ -9,12 +9,12 @@ module clock_to_7seg (
 	i_minutes,
 	i_hours,
 
-        o_hours_msb,
-        o_hours_lsb,
-        o_minutes_msb,
-        o_minutes_lsb,
-        o_seconds_msb,
-        o_seconds_lsb
+	o_hours_msb,
+	o_hours_lsb,
+	o_minutes_msb,
+	o_minutes_lsb,
+	o_seconds_msb,
+	o_seconds_lsb
 );
 
 input wire i_clk;

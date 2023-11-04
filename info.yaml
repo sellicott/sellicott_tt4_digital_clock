@@ -5,10 +5,24 @@ project:
 
 # If using an HDL, set wokwi_id as 0 and uncomment and list your source files here. 
 # Source files must be in ./src and you must list each source file separately
-#  source_files:        
-#    - counter.v
-#    - decoder.v
-#  top_module:  "tt_um_example"      # Put the name of your top module here, must start with "tt_um_". Make it unique by including your github username
+source_files:        
+  - tt_um_digital_clock_sellicott.v
+  - clock_wrapper.v
+  - clock_stb_gen.v
+  - reference_clk_stb.v
+  - sysclk_divider.v
+  - button_debounce.v
+  - basic_clock.v
+  - clk_to_7seg.v
+  - output_wrapper.v
+  - timeset_divider.v
+  - load_divider.v
+  - overflow_counter.v
+  - time_register.v
+  - bcd_to_7seg.v
+  - bin_to_bcd.v
+  - shift_register.v
+top_module:  "tt_um_digital_clock_sellicott"
 
 # How many tiles your design occupies? A single tile is about 167x108 uM.
   tiles: "1x1"    # Valid values: 1x1, 1x2, 2x2, 4x2 or 8x2
@@ -21,10 +35,10 @@ yaml_version: 4
 #
 # Here is a great example: https://github.com/davidsiaw/tt02-davidsiaw-stackcalc/blob/38c5647f83aad2aec675d566aa3d67b98f0aac81/info.yaml
 documentation: 
-  author:       ""      # Your name
-  title:        ""      # Project title
-  language:     "Wokwi" # other examples include Verilog, Amaranth, VHDL, etc
-  description:  ""      # Short description of what your project does
+  author:       "Samuel Ellicott"
+  title:        "Digital Desk Clock"
+  language:     "Verilog"
+  description:  "Simple Digital Clock Project. TinyTapeout Demo for Columbus SSCS/CAS"
 
 # Longer description of how the project works. You can use standard markdown format.
   how_it_works: |
@@ -36,24 +50,24 @@ documentation:
 
 # A description of what the inputs do (e.g. red button, SPI CLK, SPI MOSI, etc).
   inputs:               
-    - none
-    - none
-    - none
-    - none
-    - none
+    - refclk - reference clock (32768 Hz) 
+    - use_refclk - select whether to divide the system clock or use an external reference (0: system clock, 1: refclk)
+    - fast_set - select whether to set the time using a fast (5Hz) or a slow (2Hz) clock (0: slow, 1: fast) 
+    - hours_set - set the hours (when both hours_set and minutes_set are simultaneously pressed, seconds are cleared)
+    - minutes_set - set the minutes 
     - none
     - none
     - none
 # A description of what the outputs do (e.g. status LED, SPI MISO, etc)
   outputs:
-    - segment a
-    - segment b
-    - segment c
-    - segment d
-    - segment e
-    - segment f
-    - segment g
-    - dot
+    - serial_data - shift register serial output data for 7-segment displays
+    - serial_latch - shift register latch clock for 7-segment displays 
+    - serial_clk - shift register clock signal
+    - none
+    - none
+    - none 
+    - none
+    - none 
 # A description of what the bidirectional I/O pins do (e.g. I2C SDA, I2C SCL, etc)
   bidirectional:
     - none
@@ -66,9 +80,9 @@ documentation:
     - none
 
 # The following fields are optional
-  tag:          ""      # comma separated list of tags: test, encryption, experiment, clock, animation, utility, industrial, pwm, fpga, alu, microprocessor, risc, riscv, sensor, signal generator, fft, filter, music, bcd, sound, serial, timer, random number generator, calculator, decoder, counter, puzzle, multiplier, game, oscillator,
-  external_hw:  ""      # Describe any external hardware needed
-  discord:      ""      # Your discord handle, used for communication and automatically assigning tapeout role after a submission
-  doc_link:     ""      # URL to longer form documentation, eg the README.md in your repository
-  clock_hz:     0       # Clock frequency in Hz (if required)
+  tag:          "clock, demo, Columbus, SSCS, CAS, time"
+  external_hw:  "shift registers, 7-segment displays"      # Describe any external hardware needed
+  discord:      "@sellicott"
+  doc_link:     "https://github.com/sellicott/sellicott_tt4_digital_clock/blob/main/README.md"
+  clock_hz:     5000000
   picture:      ""      # relative path to a picture in your repository (must be 512kb or less)
