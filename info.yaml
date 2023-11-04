@@ -42,11 +42,19 @@ documentation:
 
 # Longer description of how the project works. You can use standard markdown format.
   how_it_works: |
-      Explain how your project works
+    Simple digital clock, displays hours, minutes, and seconds in either a 12h or a 24h format
+    (selectable by user input). Since there are not enough output pins to directly drive a 6x
+    7-segment displays, the data is shifted out serially using an internal 8-bit shift register.
+    The shift register drives 6-external 74xx596 shift registers to the displays. Clock and control
+    signals (`clk_out`, `latch_out`) are also used to shift and latch the data into the external 
+    shift registers respectively. The time can be set using the `set_hours` and `set_minutes` inputs.
+    If `set_fast` is high, then the the hours or minutes will be incremented at a rate of 5Hz, 
+    otherwise it will be set at a rate of 1Hz. Note that when setting either the minutes, rolling-over
+    will not affect the hours setting.
 
 # Instructions on how someone could test your project, include things like what buttons do what and how to set the clock if needed
   how_to_test:  |
-      Explain how to test your project
+    Connect serial output to a 6x 8-bit shift registers to display the output on 6x 7-segment displays
 
 # A description of what the inputs do (e.g. red button, SPI CLK, SPI MOSI, etc).
   inputs:               
