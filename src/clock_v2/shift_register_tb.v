@@ -1,18 +1,7 @@
 `timescale 1ns / 1ns
 `default_nettype none
 
-module shift_register_tb (
-    i_reset_n,   // syncronous reset
-    i_clk,       // system clock
-    i_start_stb, // start transfer pulse
-    o_busy,      // output to signal that we are processing a request
-
-    // input data
-    i_parallel_data,
-    
-    // output shift register
-    o_serial_data,
-    o_serial_clk,
+module clock_wrapper_tb (
 
     // testbench outputs
     o_parallel_data
@@ -30,6 +19,7 @@ input  wire [WIDTH-1:0] i_parallel_data;
 
 output wire o_serial_data;
 output wire o_serial_clk;
+output wire o_serial_latch;
 
 output wire [WIDTH-1:0] o_parallel_data;
 
@@ -64,10 +54,12 @@ shift_register #(
     
     // output shift register
     .o_serial_data(o_serial_data),
-    .o_serial_clk(o_serial_clk)
+    .o_serial_clk(o_serial_clk),
+    .o_serial_latch(o_serial_latch)
 );
 
 reg [WIDTH-1:0] shift_in_reg = 0;
+reg [WIDTH-1:0] parallel_out_reg = 0;
 
 always @(posedge o_serial_clk) begin
 	if (!i_reset_n) begin 
@@ -78,7 +70,16 @@ always @(posedge o_serial_clk) begin
 	end
 end
 
-assign o_parallel_data = shift_in_reg;
+always @(posedge o_serial_latch) begin 
+	if (!i_reset_n) begin 
+		parallel_out_reg <= 0;
+	end
+	else begin
+		parallel_out_reg <= shift_in_reg;
+	end
+end
+
+assign o_parallel_data = parallel_out_reg;
 
 endmodule
 

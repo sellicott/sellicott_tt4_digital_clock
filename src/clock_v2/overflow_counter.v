@@ -26,7 +26,7 @@ output wire o_overflow;
 
 reg [WIDTH-1:0] counter = 0;
 assign o_count = counter;
-assign o_overflow = (o_count >= OVERFLOW-1) & i_en;
+assign o_overflow = (o_count >= OVERFLOW[WIDTH-1:0]-1) & i_en;
 
 always @(posedge i_sysclk)
 begin

@@ -21,27 +21,24 @@ module shift_register (
     
     // output shift register
     o_serial_data,
-    o_serial_clk,
-    o_serial_latch
+    o_serial_clk
 );
 parameter WIDTH = 8;
 
 input  wire i_reset_n;
 input  wire i_clk;
 input  wire i_clk_stb;
-input  wire i_start_stb;
+input  wire i_write_stb;
 output wire o_busy;
 
 input wire [WIDTH-1:0] i_parallel_data;
 
 output wire o_serial_data;
 output wire o_serial_clk;
-output wire o_serial_latch;
 
 localparam IDLE     = 0;
 localparam LOAD     = 1;
 localparam TRANSFER = 2;
-localparam LATCH    = 3;
 reg [2:0] state;
 
 reg [2*WIDTH:0] transfer_state;
@@ -68,10 +65,7 @@ always @(posedge i_clk) begin
 	state <= TRANSFER;
     end
     // if we are currently transfering the last bit go back to the idle state
-    else if ((state == TRANSFER) && (transfer_state >= 2*WIDTH-1) ) begin
-	state <= LATCH;
-    end
-    else if ((state == LATCH) && o_serial_latch && i_clk_stb) begin 
+    else if ((transfer_state >= 2*WIDTH-1) && o_serial_clk && i_clk_stb) begin
 	state <= IDLE;
     end
 end
@@ -83,48 +77,41 @@ always @(posedge i_clk) begin
     else if (state == IDLE) begin 
 	transfer_state <= 0;
     end
-    else if((state == TRANSFER) && i_clk_stb) begin
+    else if(i_clk_stb) begin
 	transfer_state <= transfer_state + 1;
     end
 end
 
 reg serial_clk;
-reg serial_latch;
 reg [WIDTH-1:0] serial_data;
 
 always @(posedge i_clk) begin 
     if (!i_reset_n) begin 
-	serial_clk   <= 0;
-	serial_latch <= 0;
-	serial_data  <= 0;
+	serial_clk <= 0;
+	serial_data < = 0;
     end
     else if (state == IDLE) begin
-	serial_clk   <= 0;
-	serial_latch <= 0;
-	serial_data  <= 0;
+	serial_data <= 0;
+	serial_clk <= 0;
     end
     else if (state == LOAD) begin 
-	serial_clk   <= 0;
-	serial_latch <= 0;
-	serial_data  <= i_parallel_data;
+	serial_data <= i_parallel_data;
+	serial_clk <= 0;
     end
-    else if ((state == TRANSFER) && (i_clk_stb)) begin 
-	serial_clk <= ~serial_clk;
+    else if (state == TRANSFER) begin 
 	if ((transfer_state & 1) == 1) begin 
+	    serial_clk = ~serial_clk;
+	end
+	else begin 
 	    // shift data out MSB first
 	    serial_data <= {serial_data[WIDTH-2:0], 1'b0};
 	end
 
-    end
-    else if ((state == LATCH) && (i_clk_stb)) begin 
-	serial_clk   <= 0;
-	serial_latch <= 1;
     end
 end
 
 assign o_busy = state != IDLE;
 assign o_serial_data = serial_data[WIDTH-1];
 assign o_serial_clk = serial_clk;
-assign o_serial_latch = serial_latch;
 
 endmodule

@@ -4,7 +4,6 @@
 module clock_to_7seg (
 	i_clk,
 	i_reset_n,
-	i_en,
 
 	i_seconds,
 	i_minutes,
@@ -20,17 +19,16 @@ module clock_to_7seg (
 
 input wire i_clk;
 input wire i_reset_n;
-input wire i_en;
 input wire [5:0] i_seconds;
 input wire [5:0] i_minutes;
 input wire [4:0] i_hours;
 
-output wire [6:0] o_hours_msb;
-output wire [6:0] o_hours_lsb;
-output wire [6:0] o_minutes_msb; 
-output wire [6:0] o_minutes_lsb;
-output wire [6:0] o_seconds_msb;
-output wire [6:0] o_seconds_lsb;
+output wire [3:0] o_hours_msb;
+output wire [3:0] o_hours_lsb;
+output wire [3:0] o_minutes_msb; 
+output wire [3:0] o_minutes_lsb;
+output wire [3:0] o_seconds_msb;
+output wire [3:0] o_seconds_lsb;
 
 // pipeline the bcd outputs into registers
 wire [3:0] hours_msb;
@@ -40,12 +38,14 @@ wire [3:0] minutes_lsb;
 wire [3:0] seconds_msb;
 wire [3:0] seconds_lsb;
 
-wire [3:0] hours_msb_reg;
-wire [3:0] hours_lsb_reg;
-wire [3:0] minutes_msb_reg;
-wire [3:0] minutes_lsb_reg;
-wire [3:0] seconds_msb_reg;
-wire [3:0] seconds_lsb_reg;
+reg [3:0] hours_msb_reg;
+reg [3:0] hours_lsb_reg;
+reg [3:0] minutes_msb_reg;
+reg [3:0] minutes_lsb_reg;
+reg [3:0] seconds_msb_reg;
+reg [3:0] seconds_lsb_reg;
+
+wire [5:0] hours_int = {1'b0, i_hours};
 
 bin_to_bcd hours_bcd_inst (
 	.i_clk(i_clk),
@@ -85,39 +85,12 @@ always @(posedge i_clk) begin
 	end
 end
 
-wire [5:0] hours_int = {1'b0, i_hours};
-
-bcd_to_7seg hours_msb_inst (
-    .bcd(hours_msb_reg),
-    .en(i_en),
-    .led_out(o_hours_msb)
-);
-bcd_to_7seg hours_lsb_inst (
-    .bcd(hours_lsb_reg),
-    .en(i_en),
-    .led_out(o_hours_lsb)
-);
-
-bcd_to_7seg minutes_msb_inst (
-    .bcd(minutes_msb_reg),
-    .en(i_en),
-    .led_out(o_minutes_msb)
-);
-bcd_to_7seg minutes_lsb_inst (
-    .bcd(minutes_lsb_reg),
-    .en(i_en),
-    .led_out(o_minutes_lsb)
-);
-
-bcd_to_7seg seconds_msb_inst (
-    .bcd(seconds_msb_reg),
-    .en(i_en),
-    .led_out(o_seconds_msb)
-);
-bcd_to_7seg seconds_lsb_inst (
-    .bcd(seconds_lsb_reg),
-    .en(i_en),
-    .led_out(o_seconds_lsb)
-);
+assign o_hours_msb   = hours_msb_reg;
+assign o_hours_lsb   = hours_lsb_reg;
+assign o_minutes_msb = minutes_msb_reg; 
+assign o_minutes_lsb = minutes_lsb_reg;
+assign o_seconds_msb = seconds_msb_reg;
+assign o_seconds_lsb = seconds_lsb_reg;
 
 endmodule
+
