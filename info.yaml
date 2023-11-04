@@ -58,34 +58,34 @@ documentation:
 
 # A description of what the inputs do (e.g. red button, SPI CLK, SPI MOSI, etc).
   inputs:               
-    - refclk - reference clock (32768 Hz) 
-    - use_refclk - select whether to divide the system clock or use an external reference (0: system clock, 1: refclk)
-    - fast_set - select whether to set the time using a fast (5Hz) or a slow (2Hz) clock (0: slow, 1: fast) 
-    - hours_set - set the hours (when both hours_set and minutes_set are simultaneously pressed, seconds are cleared)
-    - minutes_set - set the minutes 
-    - none
-    - none
-    - none
+     - refclk - reference clock (32768 Hz) 
+     - use_refclk - select whether to divide the system clock or use an external reference (0: system clock, 1: refclk)
+     - fast_set - select whether to set the time using a fast (5Hz) or a slow (2Hz) clock (0: slow, 1: fast) 
+     - hours_set - set the hours (when both hours_set and minutes_set are simultaneously pressed, seconds are cleared)
+     - minutes_set - set the minutes 
+     - none
+     - none
+     - none
 # A description of what the outputs do (e.g. status LED, SPI MISO, etc)
   outputs:
-    - serial_data - shift register serial output data for 7-segment displays
-    - serial_latch - shift register latch clock for 7-segment displays 
-    - serial_clk - shift register clock signal
-    - none
-    - none
-    - none 
-    - none
-    - none 
+     - serial_data - shift register serial output data for 7-segment displays
+     - serial_latch - shift register latch clock for 7-segment displays 
+     - serial_clk - shift register clock signal
+     - none
+     - none
+     - none 
+     - none
+     - none 
 # A description of what the bidirectional I/O pins do (e.g. I2C SDA, I2C SCL, etc)
   bidirectional:
-    - none
-    - none
-    - none
-    - none
-    - none
-    - none
-    - none
-    - none
+     - none
+     - none
+     - none
+     - none
+     - none
+     - none
+     - none
+     - none
 
 # The following fields are optional
   tag:          "clock, demo, Columbus, SSCS, CAS, time"
